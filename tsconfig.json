@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es6",                      // Use ES6 as the compilation target
+    "module": "commonjs",                 // Use commonjs module system for Node.js
+    "strict": true,                       // Enable strict type-checking options
+    "esModuleInterop": true,              // Allow default imports from modules with no default export
+    "skipLibCheck": true,                 // Skip type checking for all declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent file name casing
+    "noImplicitAny": false,                // Raise error on expressions and declarations with an implied "any" type
+    "noUnusedLocals": true,               // Report errors on unused local variables
+    "noUnusedParameters": true,           // Report errors on unused function parameters
+    "noImplicitReturns": true,            // Ensure functions return values on all code paths
+    "noFallthroughCasesInSwitch": true,   // Report errors for fallthrough cases in switch statements
+    "moduleResolution": "node",           // Use Node.js style resolution for modules
+    "resolveJsonModule": true,  
+              // Allow importing JSON modules
+    "outDir": "./dist",                   // Output directory for compiled JavaScript files
+    "baseUrl": ".",                       // Base directory for module resolution
+    "paths": {                            // Aliases for path mapping
+      "@src/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*"],                // Include all TypeScript files in the src folder
+  "exclude": ["node_modules", "dist"]     // Exclude node_modules and dist directories
+}
