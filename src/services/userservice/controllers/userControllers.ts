@@ -1,5 +1,7 @@
 import { NextFunction, Request,Response } from "express";
 import response  from "../../../utils/errorHandler";
+import {  fork } from "child_process";
+import path from "path";
 
 // Registration handler
 export const userRegister = async (req: Request, res: Response,next:NextFunction) => {
@@ -15,7 +17,40 @@ export const userRegister = async (req: Request, res: Response,next:NextFunction
         message: 'Please provide all required fields (name, email, password).',
       });
     }
+    const child_process = fork(path.join(__dirname, 'ChildProcess.js'));
 
+    // Event: When child process is connected
+    child_process.on("spawn", () => {
+      console.log('Child process is connected.');
+    });
+    
+    // Event: Receiving message from the child process
+    child_process.on('message', (data) => {
+      console.log('Received message from child process:');
+      console.log(data);
+      
+    });
+    
+    // Event: When the child process exits
+    child_process.on('exit', (code, signal) => {
+      console.log(`Child process exited with code ${code} and signal ${signal}`);
+    });
+    
+    // Event: When the child process is closed
+    child_process.on('close', (code) => {
+      console.log(`Child process closed with code ${code}`);
+    });
+    
+    // Event: Handle child process errors
+    child_process.on('error', (error) => {
+      console.log('Error in child process:', error.message);
+    });
+    
+    // Kill the child process after some time
+    setTimeout(() => {
+      console.log('Killing child process...');
+      child_process.kill();  // You can pass a signal if required
+    }, 5000);
     // Check if user already exists
     // const existingUser = await User.findOne({ where: { email } });
     // if (existingUser) {
