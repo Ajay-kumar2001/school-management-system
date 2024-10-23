@@ -2,6 +2,7 @@ import { NextFunction, Request,Response } from "express";
 import response  from "../../../utils/errorHandler";
 import {  fork } from "child_process";
 import path from "path";
+import { sendemail } from "../../../utils/sendEmai";
 
 // Registration handler
 export const userRegister = async (req: Request, res: Response,next:NextFunction) => {
@@ -93,7 +94,19 @@ export const userRegister = async (req: Request, res: Response,next:NextFunction
   }
 };
 
+export const sendEmail=async(req:Request, res:Response,next:NextFunction)=>{
+  const emailResponse =await sendemail(req.body)
 
+  if( emailResponse.error) return   response.errorReResponse({next,error:{ statusCode: 500,message: emailResponse.message,}});
+
+  return response.successResponse({ response: res, statusCode: 200, message:emailResponse.messsage });
+
+}
+// export const inviteUser = (req: Request, res: Response,next:NextFunction) => {
+  
+
+// }
 export const userServices={
-    userRegister
+    userRegister,
+    sendEmail
 };

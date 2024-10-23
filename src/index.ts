@@ -1,13 +1,14 @@
 import express, {  Response } from 'express';
 import userRoutes from './services/userservice/routes/userRoutes';
 import { errorHandler } from './middlewares/errorhandler';
-const app = express();
-const port = process.env.PORT || 3000;
+import "dotenv/config"
+// import "./dataBase/connection"
 
+const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-
+const port = process.env.PORT || 4000;
 // Define a simple route
 app.get('/', ( res: Response) => {
   res.send('Hello, TypeScript Server!');
