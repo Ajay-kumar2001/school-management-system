@@ -2,7 +2,7 @@ import express, {  Response } from 'express';
 import userRoutes from './services/userservice/routes/userRoutes';
 import { errorHandler } from './middlewares/errorhandler';
 import "dotenv/config"
-// import "./dataBase/connection"
+import "./dataBase/connection"
 
 const app = express();
 
