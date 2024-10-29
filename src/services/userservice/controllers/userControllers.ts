@@ -100,7 +100,6 @@ export const sendEmail=async(req:Request, res:Response,next:NextFunction)=>{
   if( emailResponse.error) return   response.errorReResponse({next,error:{ statusCode: 500,message: emailResponse.message,}});
 
   return response.successResponse({ response: res, statusCode: 200, message:emailResponse.messsage });
-
 }
 // export const inviteUser = (req: Request, res: Response,next:NextFunction) => {
   

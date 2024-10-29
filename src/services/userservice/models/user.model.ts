@@ -1,40 +1,72 @@
-import {  Model, Sequelize } from "sequelize";
+import { Model, DataTypes, Sequelize } from "sequelize";
 
-// Define the interface for User model attributes
-interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: Date;
-  gender?: string;
-  contactNumber: string;
-  email: string;
-  profilePicture?: string;
-  userType?: string;
-  socketId?: string;
-}
-
-// Define the interface that extends both Sequelize's Model and User attributes
-export interface UserInterface extends Model<User>, User {}
-
-// Define enums for fields like gender or userType if applicable
+// Define enums for fields like gender or userType
 enum Gender {
   MALE = "Male",
   FEMALE = "Female",
   OTHER = "Other",
 }
 
-enum UserType {
-  admin = "Admin",
-  student = "student",
-  parent = "parent",
-  teacher = "teacher",
+enum MaritalStatus {
+  SINGLE = 'Single',
+  MARRIED = 'Married',
+  DIVORCED = 'Divorced',
+  WIDOWED = 'Widowed',
 }
 
-// Define the User model
-const userModel = (sequelize: Sequelize,DataTypes:any) => {
-  const User = sequelize.define<UserInterface>(
-    "User",
+enum UserType {
+  ADMIN = "Admin",
+  STUDENT = "Student",
+  PARENT = "Parent",
+  TEACHER = "Teacher",
+}
+
+// Define the interface for User attributes
+interface UserAttributes {
+  id: number;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: Date;  // Use Date for consistency
+  gender?: Gender;
+  contactNumber: string;
+  email: string;
+  profilePicture?: string;
+  userType?: UserType;
+  address?: string;
+  nationality: string;
+  maritalStatus: MaritalStatus;  // Updated to enum
+  socketId?: string;
+  emergencyContactName: string;
+  emergencyContactRelationship: string;
+  emergencyContactNumber: string;
+}
+
+// Define the User model class
+class User extends Model<UserAttributes, UserAttributes> {
+  declare id: number;
+  declare firstName: string;
+  declare lastName: string;
+  declare dateOfBirth: Date;
+  declare gender?: Gender;
+  declare contactNumber: string;
+  declare email: string;
+  declare profilePicture?: string;
+  declare userType?: UserType;
+  declare socketId?: string;
+  declare createdAt: Date;
+  declare updatedAt: Date;
+  declare deletedAt?: Date;
+  declare address?: string; // Added
+  declare nationality: string; // Added
+  declare maritalStatus: MaritalStatus; // Added
+  declare emergencyContactName: string; // Added
+  declare emergencyContactRelationship: string; // Added
+  declare emergencyContactNumber: string; // Added
+}
+
+// Initialize the User model
+const UserModel = (sequelize: Sequelize) => {
+  const user = User.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -44,29 +76,40 @@ const userModel = (sequelize: Sequelize,DataTypes:any) => {
       firstName: {
         type: DataTypes.STRING(50),
         allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
       },
       lastName: {
         type: DataTypes.STRING(50),
         allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
       },
       dateOfBirth: {
-        type: DataTypes.DATEONLY, // Better suited for storing just the date
+        type: DataTypes.DATEONLY,
         allowNull: false,
       },
       gender: {
-        type: DataTypes.ENUM(...Object.values(Gender)), // Using an enum for gender
+        type: DataTypes.ENUM(...Object.values(Gender)),
         allowNull: true,
       },
       contactNumber: {
         type: DataTypes.STRING(15),
         allowNull: false,
+        validate: {
+          notEmpty: true,
+          is: /^[0-9]{10,15}$/, // Example regex for phone numbers
+        },
       },
       email: {
         type: DataTypes.STRING(100),
         allowNull: false,
         unique: true,
         validate: {
-          isEmail: true, // Email format validation
+          isEmail: true,
+          notEmpty: true,
         },
       },
       profilePicture: {
@@ -74,7 +117,7 @@ const userModel = (sequelize: Sequelize,DataTypes:any) => {
         allowNull: true,
       },
       userType: {
-        type: DataTypes.ENUM(...Object.values(UserType)), // Using an enum for user types
+        type: DataTypes.ENUM(...Object.values(UserType)),
         allowNull: true,
       },
       socketId: {
@@ -82,11 +125,40 @@ const userModel = (sequelize: Sequelize,DataTypes:any) => {
         allowNull: true,
         unique: true,
       },
+      address: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      nationality: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      maritalStatus: {
+        type: DataTypes.ENUM(...Object.values(MaritalStatus)),
+        allowNull: false,
+      },
+      emergencyContactName: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+      emergencyContactRelationship: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      emergencyContactNumber: {
+        type: DataTypes.STRING(15),
+        allowNull: false,
+        validate: {
+          is: /^[0-9]{10,15}$/, // Example regex for emergency contact
+        },
+      },
     },
     {
-      timestamps: true, // Automatically adds createdAt and updatedAt
-      paranoid: true,   // Adds deletedAt column for soft deletes
-      freezeTableName: true, // Disables automatic pluralization of table name
+      sequelize,
+      tableName: "Users",
+      timestamps: true,
+      paranoid: true,
+      freezeTableName: true,
       indexes: [
         {
           unique: true,
@@ -101,12 +173,17 @@ const userModel = (sequelize: Sequelize,DataTypes:any) => {
           unique: true,
           fields: ["socketId"],
           name: "socketId_index",
+          where: {
+            socketId: {
+              [Symbol.for('ne')]: null,
+            },
+          },
         },
       ],
     }
   );
 
-  return User;
+  return user;
 };
 
-export default userModel;
+export { User, UserModel, UserAttributes, Gender, UserType, MaritalStatus };

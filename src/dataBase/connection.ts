@@ -1,5 +1,9 @@
-import {Sequelize,ModelStatic, DataTypes} from "sequelize";
-import userModel ,{UserInterface} from "../services/userservice/models/user.model";
+import {Sequelize,ModelStatic,} from "sequelize";
+import  {User,UserModel} from "../services/userservice/models/user.model";
+import { TeachersModel,TeacherAttributs } from "../services/teachers/models/teachers.model";
+import { StudentModel,StudentAttributes } from "../services/students/models/student.model";
+import { EducationModel,EducationAttributes } from "../services/education/models/educational.model";
+import { DocumentModel,DocumentAttributes } from "../services/education/models/documents.model";
 export const connection=new Sequelize(
     process.env.DB_DATABASE as string,
     process.env.DB_USERNAME as string,
@@ -16,13 +20,22 @@ connection.authenticate().then(()=>console.log("database connected successfully"
 interface Connection{
     Sequelize: typeof Sequelize;
     connection:Sequelize;
-    UserModel: ModelStatic<UserInterface>;
+    UserModel: ModelStatic<User>;
+    TeachersModel: ModelStatic<TeacherAttributs>;
+    StudentModel: ModelStatic<StudentAttributes>;
+    DocumentModel: ModelStatic<DocumentAttributes>;
+    EducationModel: ModelStatic<EducationAttributes>;
 
 }
 const  dataBase:Connection={
     Sequelize,
     connection:connection,
-    UserModel: userModel(connection,DataTypes),
+    UserModel: UserModel(connection),
+    TeachersModel: TeachersModel(connection),
+    StudentModel: StudentModel(connection),
+    DocumentModel: DocumentModel(connection),
+    EducationModel: EducationModel(connection),
+ 
 }
 
 //{alter:true}
