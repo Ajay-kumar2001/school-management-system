@@ -95,7 +95,8 @@ export const userRegister = async (req: Request, res: Response,next:NextFunction
 };
 
 export const sendEmail=async(req:Request, res:Response,next:NextFunction)=>{
-  const emailResponse =await sendemail(req.body)
+  const { toRecepients,subject } = req.body;
+  const emailResponse =await sendemail({toRecepients,subject})
 
   if( emailResponse.error) return   response.errorReResponse({next,error:{ statusCode: 500,message: emailResponse.message,}});
 

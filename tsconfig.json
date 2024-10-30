@@ -7,8 +7,8 @@
     "skipLibCheck": true,                 // Skip type checking for all declaration files
     "forceConsistentCasingInFileNames": true, // Ensure consistent file name casing
     "noImplicitAny": false,                // Raise error on expressions and declarations with an implied "any" type
-    "noUnusedLocals": true,               // Report errors on unused local variables
-    "noUnusedParameters": true,           // Report errors on unused function parameters
+    "noUnusedLocals": false,               // Report errors on unused local variables
+    "noUnusedParameters": false,           // Report errors on unused function parameters
     "noImplicitReturns": true,            // Ensure functions return values on all code paths
     "noFallthroughCasesInSwitch": true,   // Report errors for fallthrough cases in switch statements
     "moduleResolution": "node",           // Use Node.js style resolution for modules

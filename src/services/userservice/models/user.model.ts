@@ -28,6 +28,7 @@ interface UserAttributes {
   lastName: string;
   dateOfBirth: Date;  // Use Date for consistency
   gender?: Gender;
+  age?: number;  // Added to calculate age based on dateOfBirth
   contactNumber: string;
   email: string;
   profilePicture?: string;
@@ -39,6 +40,8 @@ interface UserAttributes {
   emergencyContactName: string;
   emergencyContactRelationship: string;
   emergencyContactNumber: string;
+  medicalHistory: string;
+  languages: string[];
 }
 
 // Define the User model class
@@ -46,22 +49,27 @@ class User extends Model<UserAttributes, UserAttributes> {
   declare id: number;
   declare firstName: string;
   declare lastName: string;
-  declare dateOfBirth: Date;
+  declare age: number;
   declare gender?: Gender;
-  declare contactNumber: string;
   declare email: string;
+  declare address?: string; // Added
   declare profilePicture?: string;
+  declare emergencyContactName: string; // Added
+  declare emergencyContactRelationship: string; // Added
+  declare emergencyContactNumber: string; // Added
+  declare contactNumber: string;
+  declare dateOfBirth: Date;
+  declare maritalStatus: MaritalStatus; //
+  declare nationality: string; // Added
+declare medicalHistory: string; // Added
   declare userType?: UserType;
   declare socketId?: string;
   declare createdAt: Date;
   declare updatedAt: Date;
   declare deletedAt?: Date;
-  declare address?: string; // Added
-  declare nationality: string; // Added
-  declare maritalStatus: MaritalStatus; // Added
-  declare emergencyContactName: string; // Added
-  declare emergencyContactRelationship: string; // Added
-  declare emergencyContactNumber: string; // Added
+  declare languages: string[]; // Added
+
+ 
 }
 
 // Initialize the User model
@@ -93,11 +101,16 @@ const UserModel = (sequelize: Sequelize) => {
       },
       gender: {
         type: DataTypes.ENUM(...Object.values(Gender)),
-        allowNull: true,
+        allowNull: false,
+      },
+      age: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        
       },
       contactNumber: {
         type: DataTypes.STRING(15),
-        allowNull: false,
+        allowNull: true,
         validate: {
           notEmpty: true,
           is: /^[0-9]{10,15}$/, // Example regex for phone numbers
@@ -137,12 +150,20 @@ const UserModel = (sequelize: Sequelize) => {
         type: DataTypes.ENUM(...Object.values(MaritalStatus)),
         allowNull: false,
       },
+      languages: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
       emergencyContactName: {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
       emergencyContactRelationship: {
         type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      medicalHistory:{
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       emergencyContactNumber: {

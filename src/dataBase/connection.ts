@@ -41,6 +41,6 @@ const  dataBase:Connection={
 //{alter:true}
 // { force: false }
 
-// connection.sync({ alter: true}).then(() => console.log('Database tables synced.'))
+// connection.sync({alter:true}).then(() => console.log('Database tables synced.'))
 // .catch((error: unknown) => console.error('Error syncing database:', error));
 export default dataBase
